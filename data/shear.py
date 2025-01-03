@@ -4,15 +4,17 @@ import jax.numpy as jnp
 import jax.random as jr
 import numpy as np
 import tensorflow_probability.substrates.jax.distributions as tfd
+from os.path import join
 
 
 def get_shear_experiment():
-    data_dir = "/Users/Jed.Homer/phd/sbiax/data/shear/"
+    import importlib.resources
+    data_dir = str(importlib.resources.files("sbiax").joinpath("data/shear/"))
 
-    covariance   = np.loadtxt(data_dir + "covariance_cosmic_shear_PMEpaper.dat")
+    covariance   = np.loadtxt(join(data_dir, "covariance_cosmic_shear_PMEpaper.dat"))
     precision    = np.linalg.inv(np.matrix(covariance))
-    mu           = np.loadtxt(data_dir + "DES_shear-shear_a1.0_b0.5_data_vector")[:, 1]
-    derivatives  = np.loadtxt(data_dir + "derivatives.dat").T
+    mu           = np.loadtxt(join(data_dir, "DES_shear-shear_a1.0_b0.5_data_vector"))[:, 1]
+    derivatives  = np.loadtxt(join(data_dir, "derivatives.dat")).T
     param_names  = [r"$\Omega_m$", r"$\sigma_8$", r"$w_0$"]
     alpha        = np.array([0.3156, 0.831, -1.0]) # prior parameters (DES prior) # Om, s8, w0
     lower        = np.array([0.05, 0.45, -1.40])
